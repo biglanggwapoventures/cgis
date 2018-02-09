@@ -29,8 +29,8 @@ class GrowChickInController extends Controller
             'in.*.column_id' => 'required|exists:columns,id',
             'in.*.reference_number' => 'present|nullable',
             'in.*.chick_in_date' => 'present|nullable|date_format:Y-m-d',
-            'in.*.num_heads' => 'present|nullable|integer',
-            'in.*.num_dead' => 'present|nullable|integer',
+            'in.*.num_heads' => 'present|nullable|numeric',
+            'in.*.num_dead' => 'present|nullable|numeric',
         ]);
 
         DB::transaction(function () use ($request, $grow) {

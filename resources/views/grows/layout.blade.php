@@ -14,6 +14,7 @@
                                 <a class="nav-link {{ Route::is('grows.edit') ? 'active' : '' }}" href="{{ route('grows.edit', ['id' => $data->id]) }}">Summary</a>
                                 <a class="nav-link {{ Route::is('grows.chick-in.index') ? 'active' : '' }}" href="{{ route('grows.chick-in.index', ['grow' => $data->id]) }}">Bird Chick In</a>
                                 <a class="nav-link {{ Route::is('grows.daily-logs.index') || Route::is('grows.daily-logs.create') ? 'active' : '' }}" href="{{ route('grows.daily-logs.index', ['grow' => $data->id]) }}">Daily Logs</a>
+                                <a class="nav-link {{ Route::is('grows.harvests.index') ? 'active' : '' }}" href="{{ route('grows.harvests.index', ['grow' => $data->id]) }}">Harvest</a>
                             </div>
                         </div>
                         <div class="col">

@@ -2,7 +2,7 @@
 
 @section('manage-section')
 
-<a href="{{ route('grows.daily-logs.create', ['grow' => $grow->id]) }}" class="btn btn-info mb-1">New daily log</a>
+<a href="{{ route('grows.daily-logs.create', ['grow' => $grow->id]) }}" class="btn btn-info mb-1">Create new log</a>
 <table class="table">
     <thead class="thead-inverse">
         <tr>

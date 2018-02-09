@@ -16,6 +16,9 @@
         button[type=button]{
             cursor: pointer;
         }
+        td , th{
+            vertical-align: middle!important;
+        }
     </style>
 </head>
 <body style="height:100%">
@@ -31,7 +34,8 @@
             $('body').on('blur', '.numeric', function () {
                 var $this = $(this),
                     value = $this.val(),
-                    newValue = numeral(value).format('00');
+                    format = $this.data('format') || '0',
+                    newValue = numeral(value).format(format);
 
                 $this.val(newValue)
             });
@@ -88,17 +92,17 @@
             $('.edit-button, .cancel-button').click(toggleHidden);
 
             $('form.ajax').submit(function (e) {
-
                 e.preventDefault();
 
                 var $this = $(this),
-                submitBtn = $this.find('[type=submit]'),
-                formData = new FormData($this[0]);
+                    submitBtn = $this.find('[type=submit]'),
+                    originalText = submitBtn.text(),
+                    formData = new FormData($this[0]);
 
-                $this.find('.has-error .help-block').remove();
-                $this.find('.has-error').removeClass('has-error')
+                $this.find('.invalid-feedback').remove();
+                $this.find('.is-invalid').removeClass('is-invalid')
 
-                submitBtn.attr('disabled', 'disabled').html('<i class="fa fa-spin fa-spinner"></i> Saving...')
+                submitBtn.attr('disabled', 'disabled').html('<i class="fa fa-spin fa-spinner"></i> Loading...')
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -107,35 +111,42 @@
                     contentType: false,
                     processData: false,
                     success: function(res) {
-                        if(res.hasOwnProperty('next_url')){
-                            window.location.href = res.next_url;
+                        if(res.hasOwnProperty('data') && res.data.hasOwnProperty('location')){
+                            window.location.href = res.data.location;
                         }else if($this.data('next-url')){
                             window.location.href = $this.data('next-url');
                         }else{
-                            window.location.href = window.location;
+                            window.location.reload();
                         }
                     },
                     error: function (err) {
                         if(err.status == 422){
+                            // alertify.alert('Ooops!', 'Some fields contain errors. Please verify that all inputs are valid and try submitting again.');
                             var errors = err.responseJSON['errors'];
+
                             for(var field in errors){
                                 var fieldName = field;
                                 if(field.indexOf('.') !== -1){
-                                var parts = field.split('.'),
-                                name = parts.splice(0, 1),
-                                newField = name+'['+parts.join('][')+']';
-                                fieldName = newField;
+                                    var parts = field.split('.'),
+                                        name = parts.splice(0, 1),
+                                        newField = name+'['+parts.join('][')+']';
+
+                                    fieldName = newField;
+                                }
+
+                                console.log(fieldName)
+
+                                var input = $this.find("[name=\""+fieldName+"\"]");
+                                input.addClass('is-invalid');
+                                input.closest('.form-group').append('<div class="invalid-feedback">'+errors[field][0]+'</div>');
+
                             }
-                            console.log(fieldName)
-                            var input = $("[name=\""+fieldName+"\"]");
-                            input.closest('.form-group').addClass('has-error').append('<span class="help-block">'+errors[field][0]+'</span>');
-                        }
                         }else{
-                            window.alert('Internal server error!');
+                            alertify.alert('An internal server error has occured. Please refresh the page. If the error still persists. Please contact your system administrator.');
                         }
                     },
                     complete: function () {
-                        submitBtn.removeAttr('disabled').text('Save');
+                        submitBtn.removeAttr('disabled').text(originalText);
                     }
                 })
             })
@@ -173,6 +184,34 @@
                     return '<strong class="text-right d-block '+className+'">'+result+'</span>';
                 });
             }).trigger('blur');
+
+
+            $('.add-line').click(function() {
+                var table = $(this).closest('table'),
+                    clone = table.find('tbody tr:first').clone();
+                    clone.find('select,input:not([type=hidden])')
+                    .attr('name', function () {
+                        return $(this).data('name').replace('idx', table.find('tbody tr').length)
+                    })
+                    .val('');
+                clone.find('.clear').html('')
+                clone.find('[type=hidden]').remove();
+                clone.appendTo(table.find('tbody'))
+            })
+
+            $('table.dynamic').on('click', '.remove-line', function () {
+                var table = $(this).closest('table'),
+                    tr = table.find('tbody tr');
+                if(tr.length === 1){
+                    tr.find('select,input').val('')
+                        .end()
+                        .find('.clear').html('')
+                        .end()
+                        .find('[type=hidden]').remove()
+                    return;
+                }
+                $(this).closest('tr').remove();
+            });
         })
     </script>
     @stack('js')

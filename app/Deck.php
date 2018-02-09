@@ -24,4 +24,5 @@ class Deck extends Model
     {
         return $this->belongsTo('App\Building');
     }
+
 }

@@ -22,11 +22,13 @@
                 <div class="card-header text-center p-1">Mortality</div>
                 <div class="card-body p-0">
                     <table class="table table-sm" style="table-layout: fixed">
-                        <thead class="thead-inverse">
-                            <tr>
+                        <thead >
+                            <tr class="bg-info text-white">
                                 <th>Deck</th>
+                                <th>Pre Count</th>
                                 <th>AM</th>
                                 <th>PM</th>
+                                <th>Post Count</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,8 +46,14 @@
                                         {!! Form::hidden("mortality[{$loop->index}][id]", $mortality->id) !!}
                                     @endif
                                 </td>
+                                <td class="text-right">
+                                    {{ number_format($remainingHeadsPerDeck[$deck->id] + $mortality->num_am + $mortality->num_pm) }}
+                                </td>
                                 <td>{!! Form::bsText("mortality[{$loop->index}][num_am]", null, $mortality->num_am, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
                                 <td>{!! Form::bsText("mortality[{$loop->index}][num_pm]", null, $mortality->num_pm, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
+                                <td class="text-right">
+                                    {{ number_format($remainingHeadsPerDeck[$deck->id]) }}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -56,8 +64,8 @@
                 <div class="card-header text-center p-1">Feeds Consumption</div>
                 <div class="card-body p-0">
                     <table class="table table-sm" style="table-layout: fixed">
-                        <thead class="thead-inverse">
-                            <tr>
+                        <thead>
+                            <tr  class="bg-info text-white">
                                 <th></th>
                                 @foreach($feeds AS $feed)
                                     <th>{{ "{$feed->description} ({$feed->units})" }}</th>
@@ -97,8 +105,8 @@
                 <div class="card-header text-center p-1">Weight Record</div>
                 <div class="card-body p-0">
                     <table class="table table-sm" style="table-layout: fixed">
-                        <thead class="thead-inverse">
-                            <tr>
+                        <thead>
+                            <tr class="bg-info text-white">
                                 <th>Deck</th>
                                 <th>Ideal Weight</th>
                                 <th>Actual Weight</th>
@@ -137,10 +145,11 @@
                 <div class="card-header text-center p-1">Feeds Delivery</div>
                 <div class="card-body p-0">
                     <table class="table table-sm" style="table-layout: fixed">
-                        <thead class="thead-inverse">
-                            <tr>
+                        <thead>
+                            <tr class="bg-info text-white">
                                 <th>Feed</th>
                                 <th>Amount</th>
+                                <th>Remaning</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,6 +168,9 @@
                                     {!! Form::hidden("delivery[{$loop->index}][feed_id]", $feed->id) !!}
                                 </td>
                                 <td>{!! Form::bsText("delivery[{$loop->index}][num_feed]", null, $delivery->num_feed, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
+                                <td>
+
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -175,3 +187,10 @@
 {!! Form::close() !!}
 
 @endsection
+
+
+<script>
+    $(document).ready(function() {
+
+    });
+</script>

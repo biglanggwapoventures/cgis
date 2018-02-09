@@ -31,4 +31,9 @@ class DailyLog extends Model
     {
         return $this->hasMany('App\WeightRecord');
     }
+
+    public function previousDayCount()
+    {
+        return (int) $this->day_count ? ($this->day_count - 1) : 0;
+    }
 }

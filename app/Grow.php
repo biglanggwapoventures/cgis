@@ -23,6 +23,11 @@ class Grow extends Model
         return $this->hasMany('App\DailyLog');
     }
 
+    public function latestDailyLog()
+    {
+        return $this->dailyLogs()->latest()->limit()->first();
+    }
+
     public function decksUsed()
     {
         $ids = DB::table('decks AS d')
@@ -41,5 +46,10 @@ class Grow extends Model
         return $this->hasOne('App\DailyLog')
             ->selectRaw('grow_id, count(*) as count')
             ->groupBy('grow_id');
+    }
+
+    public function harvests()
+    {
+        return $this->hasMany('App\Harvest', 'grow_id');
     }
 }

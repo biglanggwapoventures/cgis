@@ -1,9 +1,14 @@
 <div class="form-group">
+    @php $errName = MyHelper::replaceBrackets($name) @endphp
     @if($label)
         {{ Form::label($name, $label, ['class' => 'control-label']) }}
     @endif
-    {{ Form::date($name, $value, array_merge(['class' => 'form-control'. ($errors->has($name) ? ' is-invalid' : '')], $attributes)) }}
-    @if($errors->has($name))
-        <div class="invalid-feedback">{{ $errors->first($name) }}</div>
+     @php $attrs = array_merge(['class' => 'form-control'], $attributes) @endphp
+     @if($errors->has($errName))
+        @php $attrs['class'] .= ' is-invalid' @endphp
+     @endif
+    {{ Form::date($name, $value, $attrs) }}
+    @if($errors->has($errName))
+        <div class="invalid-feedback">{{ $errors->first($errName) }}</div>
     @endif
 </div>

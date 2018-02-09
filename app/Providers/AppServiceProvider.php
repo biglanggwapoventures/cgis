@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\FeedsConsumption;
+use App\FeedsDelivery;
+use App\Observers\FeedsConsumptionObserver;
+use App\Observers\FeedsDeliveryObserver;
 use Form;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('print_r', function ($data) {
             return "<?php echo \"<pre>\"?><?php print_r({$data})?><?php echo \"</pre>\"?>";
         });
+
+        FeedsDelivery::observe(FeedsDeliveryObserver::class);
+        FeedsConsumption::observe(FeedsConsumptionObserver::class);
 
     }
 
