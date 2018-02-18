@@ -43,8 +43,10 @@ Route::group(['prefix' => 'grows/{grow}/harvest', 'as' => 'grows.harvests.'], fu
     Route::get('create', 'HarvestController@create')->name('create');
     Route::get('{harvest}/edit', 'HarvestController@edit')->name('edit');
     Route::patch('{harvest}', 'HarvestController@update')->name('update');
-
 });
+
+Route::get('grows/{grow}/report', 'SummaryController')->name('grows.report');
 
 Route::resource('feeds', 'FeedsController');
 // });
+

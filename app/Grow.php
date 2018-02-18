@@ -52,4 +52,53 @@ class Grow extends Model
     {
         return $this->hasMany('App\Harvest', 'grow_id');
     }
+
+    public function totalChicks()
+    {
+        return intval($this->chickIns()->sum('num_heads'));
+    }
+
+    public function totalDOA()
+    {
+        return intval($this->chickIns()->sum('num_dead'));
+    }
+
+    public function netChicks()
+    {
+        return $this->totalChicks() - $this->totalDOA();
+    }
+
+    public function generateReport()
+    {
+        $dailyLogs = $this->dailyLogs()
+            ->with([
+                'mortalities' => function($q) {
+                    $q->selectRaw('SUM(num_am) as num_am, SUM(num_pm) as num_pm, SUM(num_am + num_pm) as total_mortalities, daily_log_id')->groupBy('daily_log_id');
+                }, 
+                'feedsConsumption' => function($q) {
+                    $q->selectRaw('SUM(num_feed) as num_feed, daily_log_id, feed_id')->groupBy('daily_log_id')->groupBy('feed_id');
+                }, 
+                'feedsDeliveries' => function($q) {
+                    $q->selectRaw('SUM(num_feed) as num_feed, daily_log_id, feed_id')->groupBy('daily_log_id')->groupBy('feed_id');
+                }, 
+                'weightRecords' => function($q) {
+                    $q->selectRaw('SUM(recorded_weight) as recorded_weight, daily_log_id, deck_id')->groupBy('daily_log_id')->groupBy('deck_id')->orderBy('deck_id');
+                },
+                'weightRecords.deck'
+            ])
+            ->get()
+            ->pluck(null, 'day_count')
+            ->toArray();
+
+        $dailyLogs = array_merge([
+            'grow_code' => $this->grow_code,
+            'total_chicks' => $this->totalChicks(),
+            'total_DOA' => $this->totalDOA(),
+            'net_chicks' => $this->netChicks(),
+            'daily_logs' => $dailyLogs
+        ]);
+
+        return $dailyLogs;
+    }
+
 }

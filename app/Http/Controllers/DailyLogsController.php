@@ -11,6 +11,7 @@ use App\Programs\FeedingProgramReference;
 use App\Services\GrowService;
 use DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DailyLogsController extends Controller
 {
@@ -55,6 +56,7 @@ class DailyLogsController extends Controller
         $program = FeedingProgramReference::getProgram($dailyLog->day_count);
 
         return view('grows.daily-logs', [
+            'date' => $dailyLog->date,
             'program' => $program,
             'data' => $dailyLog->load(['mortalities', 'feedsConsumption', 'feedsDeliveries', 'weightRecords']),
             'grow' => $grow->load('dailyLogsCount'),
@@ -69,6 +71,7 @@ class DailyLogsController extends Controller
     {
         DB::transaction(function () use ($grow, $request) {
             $log = $grow->dailyLogs()->create([
+                'date' => Carbon::parse($request->date)->format('Y-m-d'),
                 'day_count' => $grow->dailyLogs()->count() + 1,
                 'remarks' => $request->remarks,
             ]);
@@ -88,6 +91,10 @@ class DailyLogsController extends Controller
         DB::transaction(function () use ($grow, $dailyLog, $request) {
             $grow->update([
                 'remarks' => $request->remarks,
+            ]);
+
+            $dailyLog->update([
+                'date' => $request->date
             ]);
 
             collect($request->consumption)->each(function ($consumption) use ($dailyLog) {

@@ -28,6 +28,7 @@
                                     <td>{{ $item->end_date ? date_create($item->end_date)->format('m/d/Y') : '' }}</td>
                                     <td>
                                         <a href="{{ route('grows.edit', ['id' => $item->id]) }}" class="btn btn-info">Manage</a>
+                                        <a href="{{ route('grows.report', ['id' => $item->id]) }}" class="btn btn-success">Daily report</a>
                                     </td>
                                 </tr>
                             @endforeach

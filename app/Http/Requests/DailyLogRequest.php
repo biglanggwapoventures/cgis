@@ -24,6 +24,7 @@ class DailyLogRequest extends FormRequest
     public function rules()
     {
         return [
+            'date' => 'required',
             'remarks' => 'present',
             'consumption' => 'required|array',
             'consumption.*.id' => 'sometimes',

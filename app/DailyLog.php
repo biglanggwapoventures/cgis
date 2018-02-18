@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DailyLog extends Model
 {
     protected $fillable = [
+        'date',
         'grow_id',
         'day_count',
         'remarks',

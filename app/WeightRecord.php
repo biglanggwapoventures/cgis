@@ -17,4 +17,9 @@ class WeightRecord extends Model
     {
         return $this->belongsTo('App\DailyLog', 'daily_log_id');
     }
+
+    public function deck()
+    {
+        return $this->belongsTo('App\Deck', 'deck_id');
+    }
 }
