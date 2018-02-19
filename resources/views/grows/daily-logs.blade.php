@@ -18,9 +18,9 @@
     <div class="row">
         <div class="col-4">
             @if(isset($data))
-                {{ Form::bsText('date', 'Date', $data->date) }}
+                {{ Form::bsDate('date', 'Date', $data->date) }}
             @else
-                {{ Form::bsText('date', 'Date', now()->toDateString()) }}
+                {{ Form::bsDate('date', 'Date', now()->toDateString()) }}
             @endif
         </div>
     </div>
