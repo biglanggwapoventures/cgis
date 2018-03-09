@@ -35,6 +35,7 @@ Route::group(['prefix' => 'grows/{grow}/daily-logs', 'as' => 'grows.daily-logs.'
     Route::get('create', 'DailyLogsController@create')->name('create');
     Route::get('{dailyLog}/edit', 'DailyLogsController@edit')->name('edit');
     Route::patch('{dailyLog}', 'DailyLogsController@update')->name('update');
+    Route::delete('{dailyLog}/delete', 'DailyLogsController@delete')->name('delete');
 });
 
 Route::group(['prefix' => 'grows/{grow}/harvest', 'as' => 'grows.harvests.'], function () {

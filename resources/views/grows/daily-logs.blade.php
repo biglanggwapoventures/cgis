@@ -58,8 +58,8 @@
                                 <td class="text-right">
                                     {{ number_format($remainingHeadsPerDeck[$deck->id] + $mortality->num_am + $mortality->num_pm) }}
                                 </td>
-                                <td>{!! Form::bsText("mortality[{$loop->index}][num_am]", null, $mortality->num_am, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
-                                <td>{!! Form::bsText("mortality[{$loop->index}][num_pm]", null, $mortality->num_pm, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
+                                <td>{!! Form::bsText("mortality[{$loop->index}][num_am]", null, $mortality->num_am ? $mortality->num_am : 0, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
+                                <td>{!! Form::bsText("mortality[{$loop->index}][num_pm]", null, $mortality->num_pm ? $mortality->num_pm : 0, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
                                 <td class="text-right">
                                     {{ number_format($remainingHeadsPerDeck[$deck->id]) }}
                                 </td>
@@ -100,7 +100,7 @@
                                         @endif
                                         {!! Form::hidden("consumption[{$index}][deck_id]", $deck->id) !!}
                                         {!! Form::hidden("consumption[{$index}][feed_id]", $feed->id) !!}
-                                        {!! Form::bsText("consumption[{$index}][num_feed]", null, $consumption->num_feed, ['class' => 'form-control form-control-sm numeric text-right']) !!}
+                                        {!! Form::bsText("consumption[{$index}][num_feed]", null, $consumption->num_feed ? $consumption->num_feed : 0, ['class' => 'form-control form-control-sm numeric text-right']) !!}
                                     </td>
                                     @php $index++ @endphp
                                 @endforeach
@@ -141,7 +141,7 @@
                                     {{ $program['weight'] }}
                                     {!! Form::hidden("weight[{$loop->index}][optimal_weight]", $program['weight']) !!}
                                 </td>
-                                <td>{!! Form::bsText("weight[{$loop->index}][recorded_weight]", null, $weight->recorded_weight, ['class' => 'actual-weight form-control form-control-sm numeric text-right', 'data-optimal-weight' => $program['weight']]) !!}</td>
+                                <td>{!! Form::bsText("weight[{$loop->index}][recorded_weight]", null, $weight->recorded_weight ?  $weight->recorded_weight : 0, ['class' => 'actual-weight form-control form-control-sm numeric text-right', 'data-optimal-weight' => $program['weight']]) !!}</td>
                                 <td class="result"></td>
                             </tr>
                             @endforeach
@@ -176,7 +176,7 @@
                                     {{ $feed->description }} ({{ $feed->units }})
                                     {!! Form::hidden("delivery[{$loop->index}][feed_id]", $feed->id) !!}
                                 </td>
-                                <td>{!! Form::bsText("delivery[{$loop->index}][num_feed]", null, $delivery->num_feed, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
+                                <td>{!! Form::bsText("delivery[{$loop->index}][num_feed]", null, $delivery->num_feed ? $delivery->num_feed : 0, ['class' => 'form-control form-control-sm numeric text-right']) !!}</td>
                                 <td>
 
                                 </td>

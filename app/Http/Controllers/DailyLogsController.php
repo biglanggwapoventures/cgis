@@ -132,4 +132,11 @@ class DailyLogsController extends Controller
 
         return redirect(route('grows.daily-logs.index', ['grow' => $grow->id]));
     }
+
+    public function delete(Grow $grow, DailyLog $dailyLog)
+    {
+        DailyLog::whereGrowId($grow->id)->whereId($dailyLog->id)->delete();
+
+        return redirect()->route('grows.daily-logs.index', ['grow' => $grow->id]);
+    }
 }

@@ -57,6 +57,7 @@
 		</tr>
 	</thead>
 	<tbody>
+		{{-- @print_r($report['daily_logs']) --}}
 		@foreach($report['daily_logs'] as $log => $data)
 			<tr>
 				<td class="text-center">{{ $log }}</td>

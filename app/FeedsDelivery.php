@@ -30,4 +30,9 @@ class FeedsDelivery extends Model
             ['feed_id' => $this->feed_id, 'quantity' => $this->num_feed, 'balance' => 0]
         );
     }
+
+    public function total()
+    {
+        return 1;
+    }
 }
