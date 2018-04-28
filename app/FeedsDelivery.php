@@ -35,4 +35,9 @@ class FeedsDelivery extends Model
     {
         return 1;
     }
+
+    public function feed()
+    {
+        return $this->belongsTo('App\Feed');
+    }
 }

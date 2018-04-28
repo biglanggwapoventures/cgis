@@ -26,4 +26,14 @@ class FeedsConsumption extends Model
             ['feed_id' => $this->feed_id, 'quantity' => (-1 * $this->num_feed), 'balance' => 0]
         );
     }
+
+    public function feed()
+    {
+        return $this->belongsTo('App\Feed');
+    }
+
+    public function deck()
+    {
+        return $this->belongsTo('App\Deck');
+    }
 }

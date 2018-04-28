@@ -9,9 +9,9 @@ use App\Grow;
 use App\Http\Requests\DailyLogRequest;
 use App\Programs\FeedingProgramReference;
 use App\Services\GrowService;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class DailyLogsController extends Controller
 {
@@ -94,7 +94,7 @@ class DailyLogsController extends Controller
             ]);
 
             $dailyLog->update([
-                'date' => $request->date
+                'date' => $request->date,
             ]);
 
             collect($request->consumption)->each(function ($consumption) use ($dailyLog) {

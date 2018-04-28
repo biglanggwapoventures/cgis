@@ -50,4 +50,3 @@ Route::get('grows/{grow}/report', 'SummaryController')->name('grows.report');
 
 Route::resource('feeds', 'FeedsController');
 // });
-

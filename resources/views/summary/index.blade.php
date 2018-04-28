@@ -1,93 +1,95 @@
 @extends('home')
 
 @section('body')
-@foreach($report['daily_logs'] as $day_count => $data)
-	@if($loop->first)
-		@php $countDeck = count($data['weight_records']); @endphp
-	@endif
-@endforeach
- <div class="row">
- 	<div class="col-2 ">
- 		<h5>GROW CODE:</h5>
- 		<h5>TOTAL CHICKS:</h5>
- 		<h5>TOTAL DOA:</h5>
- 		<h5>NET CHICKS:</h5>
- 	</div>
- 	<div class="col-2 text-right">
- 		<h5>{{ $report['grow_code'] }}</h5>
- 		<h5>{{ number_format($report['total_chicks']) }}</h5>
- 		<h5>{{ number_format($report['total_DOA']) }}</h5>
- 		<h5>{{ number_format($report['net_chicks']) }}</h5>
- 	</div>
- 	<div class="col-8">
- 		<a href="{{ route('grows.index') }}" class="float-right btn btn-danger text-white">Back to index</a>
- 	</div>
- </div>
-<table class="table table-striped table-sm table-bordered">
-	<thead>
-		<tr class="text-center">
-			<th>Log #</th>
-			<th>Log Date</th>
-			<th colspan="2">Mortality</th>
-			<th colspan="2">Feed Consumption</th>
-			<th colspan="{{ $countDeck }}">Weight Record</th>
-			<th colspan="2">Feed Delivery</th>
-			<th colspan="2">Remaining Feeds</th>
-			<th colspan="2">Remaining Chicks</th>
-		</tr>
-		<tr>
-			<th></th>
-			<th></th>
-			<th>AM</th>
-			<th>PM</th>
-			<th class="text-right">CB</th>
-			<th class="text-right">BS</th>
-			@foreach($report['daily_logs'] as $day_count => $data)
-				@if ($loop->first)
-					@foreach($data['weight_records'] as $wr)
-						<th class="text-right">{{ $wr['deck']['name'] }}</th>
+<div class="row ">
+	<div class="col-sm-12">
+		<h4>Grow Code: <span class="text-info">{{ $grow->grow_code }}</span></h4>
+		<h4>Duration:
+			<span class="text-info">{{ date_create($grow->start_date)->format('M d, Y') }} &mdash; </span>
+			<span class="text-info">{{ $grow->end_date ? date_create($grow->end_date)->format('M d, Y') : 'Present' }}</span>
+		</h4>
+		<table class="table table-bordered table-hover table-sm">
+			<thead>
+				<tr>
+					<th rowspan="2">Age</th>
+					<th rowspan="2">Date</th>
+					<th rowspan="2">Mortality</th>
+					@if($grow->dailyLogs->count())
+						<th class="bg-info text-white" colspan="{{ $grow->dailyLogs[0]->mortalities->count() }}">Remaining Chicks</th>
+						<th colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}" class="text-white bg-primary">Feeds Delivered</th>
+						<th colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}" class="text-white bg-secondary">Feeds Consumption</th>
+						<th  class="text-white bg-success" colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}">Remaining Feeds</th>
+						<th colspan="{{ $grow->dailyLogs[0]->weightRecords->count() }}">Weight Records</th>
+					@endif
+				</tr>
+				@if($grow->dailyLogs->count())
+				<tr>
+					@foreach($grow->dailyLogs[0]->mortalities as $mortality)
+						<th class="bg-info text-white">{{ $mortality->deck->name }}</th>
 					@endforeach
+					@foreach($grow->dailyLogs[0]->feedsDeliveries->sortBy('feed_id') as $delivery)
+						<th class="text-white bg-primary">{{ $delivery->feed->description }}</th>
+					@endforeach
+					@foreach($grow->dailyLogs[0]->feedsDeliveries->sortBy('feed_id') as $delivery)
+						<th class="text-white bg-secondary">{{ $delivery->feed->description }}</th>
+					@endforeach
+					@foreach($grow->dailyLogs[0]->feedsDeliveries->sortBy('feed_id') as $delivery)
+						<th class="text-white bg-success">{{ $delivery->feed->description }}</th>
+					@endforeach
+					@foreach($grow->dailyLogs[0]->weightRecords as $record)
+						<th>{{ $record->deck->name }}</th>
+					@endforeach
+				</tr>
 				@endif
-			@endforeach
-			<th class="text-right">CB</th>
-			<th class="text-right">BS</th>
-			<th class="text-right">CB</th>
-			<th class="text-right">BS</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		{{-- @print_r($report['daily_logs']) --}}
-		@foreach($report['daily_logs'] as $log => $data)
-			<tr>
-				<td class="text-center">{{ $log }}</td>
-				<td class="text-center">
-					{{ Carbon\Carbon::parse($data['date'])->format('m/d/Y') }}
-				</td>
-				@foreach($data['mortalities'] as $mort)
-					<td>{{ number_format($mort['num_am']) }}</td>
-					<td>{{ number_format($mort['num_pm']) }}</td>
-				@endforeach
-				@foreach($data['feeds_consumption'] as $fc)
-					<td class="text-right">{{ $fc['num_feed'] }}</td>
-				@endforeach
-				@foreach($data['weight_records'] as $wr)
-					<td class="text-right">{{ $wr['recorded_weight'] }}</td>
-				@endforeach
-				@foreach($data['feeds_deliveries'] as $fd)
-					<td class="text-right">{{ $fd['num_feed'] }}</td>
-				@endforeach
-
-				{{-- Reserve for remaining feeds collumn --}}
-				<td></td>
-				<td></td>
-
-				@foreach($data['mortalities'] as $mort)
-					@php $remainingChicks = $report['net_chicks'] -= $mort['total_mortalities']; @endphp
-					<td>{{ number_format($remainingChicks) }}</td>
-				@endforeach
-			</tr>
-		@endforeach
-	</tbody>
-</table>
+			</thead>
+			<tbody>
+				@forelse($grow->dailyLogs AS $log)
+					<tr>
+						<td> <a target="_blank" href="{{ route('grows.daily-logs.edit', ['dailyLog' => $log->id, 'grow' => $log->grow_id]) }}">{{ $log->day_count }}</a></td>
+						<td>{{ date_create($log->date)->format('m/d/Y') }}</td>
+						<td class="text-right">
+							@php
+								$mortalityCount = $log->getTotalMortality()
+							@endphp
+							{{ $mortalityCount }}
+						</td>
+						@foreach($log->mortalities as $mortality)
+							<td class="text-right bg-info text-white">
+								@php
+									$remaining = $log->getRemainingChickCountFromDeck($mortality->deck_id, $chicksPerDeckInitial[$mortality->deck_id]);
+									$chicksPerDeckInitial[$mortality->deck_id] -= ($mortality->num_am + $mortality->num_pm)
+								 @endphp
+								{{ $remaining }}
+							</td>
+						@endforeach
+						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
+							<td class="text-right text-white bg-primary">{{ $delivery->num_feed }}</td>
+						@endforeach
+						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
+							<td class="text-right text-white bg-secondary">
+								@php
+									$consumed = $log->getTotalFeedConsumption($delivery->feed_id);
+									$feedStock[$delivery->feed_id] -= $consumed;
+								@endphp
+								{{ $consumed }}
+							</td>
+						@endforeach
+						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
+							<td class="text-right bg-success text-white">
+								@php
+									$feedStock[$delivery->feed_id] += $delivery->num_feed;
+								@endphp
+								{{ $feedStock[$delivery->feed_id] }}
+							</td>
+						@endforeach
+						@foreach($log->weightRecords as $record)
+							<td class="text-right">{{ $record->recorded_weight }}</td>
+						@endforeach
+					</tr>
+				@empty
+				@endforelse
+			</tbody>
+		</table>
+	</div>
+</div>
 @endsection

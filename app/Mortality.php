@@ -17,4 +17,9 @@ class Mortality extends Model
     {
         return $this->belongsTo('App\DailyLog');
     }
+
+    public function deck()
+    {
+        return $this->belongsTo('App\Deck');
+    }
 }
