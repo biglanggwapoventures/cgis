@@ -2,18 +2,74 @@
 
 @section('body')
 <style type="text/css">
-	.table th{
+	#main.table th{
 		text-align: center!important;
+	}
+	dl dd:not(:last-child){
+		margin-bottom: 0;
 	}
 </style>
 <div class="row ">
 	<div class="col-sm-12">
-		<h4>Grow Code: <span class="text-info">{{ $grow->grow_code }}</span></h4>
-		<h4>Duration:
-			<span class="text-info">{{ date_create($grow->start_date)->format('M d, Y') }} &mdash; </span>
-			<span class="text-info">{{ $grow->end_date ? date_create($grow->end_date)->format('M d, Y') : 'Present' }}</span>
-		</h4>
-		<table class="table table-bordered table-hover table-sm">
+		<div class="row">
+			<div class="col-sm-7">
+				<div class="row">
+					<div class="col-sm-6">
+						<dl class="row mb-0">
+						  <dt class="col-sm-6">Grow Code</dt>
+						  <dd class="col-sm-6">{{ $grow->grow_code }}</dd>
+						  <dt class="col-sm-6">Start Date</dt>
+						  <dd class="col-sm-6">
+						  	{{ date_create($grow->start_date)->format('M d, Y') }}
+						  </dd>
+						  <dt class="col-sm-6">End Date</dt>
+						  <dd class="col-sm-6">
+							{{ $grow->end_date ? date_create($grow->end_date)->format('M d, Y') : 'Present' }}
+						  </dd>
+						</dl>
+					</div>
+					<div class="col-sm-6">
+						<dl class="row mb-0">
+						  <dt class="col-sm-6">Total Chicks</dt>
+						  <dd class="col-sm-6">{{ number_format($totalChicks = $grow->getTotalChickIns()) }}</dd>
+						  <dt class="col-sm-6">Total Mortality</dt>
+						  <dd class="col-sm-6 text-danger">{{ number_format($totalMortality = $grow->getTotalMortality()) }}</dd>
+						  <dt class="col-sm-6">Total Live</dt>
+						  <dd class="col-sm-6 text-info">
+						  	{{ number_format($total = ($totalChicks - $totalMortality)) }}
+						  	<strong>({{ number_format(($total/$totalChicks)* 100) }}%)</strong>
+						  </dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-5">
+				<table class="table table-sm table-bordered">
+					<thead  class="thead-dark">
+						<tr>
+							<th rowspan="2">Feed</th>
+							<th colspan="2" class="text-center">Total</th>
+							<th rowspan="2">Remaining</th>
+						</tr>
+						<tr>
+							<th class="text-center">Delivered</th>
+							<th class="text-center">Consumed</th>
+						</tr>
+					</thead>
+					@if($grow->dailyLogs->count())
+						@foreach($grow->dailyLogs[0]->feedsDeliveries->sortBy('feed_id') as $delivery)
+							<tr>
+								<th>{{ $delivery->feed->description }}</th>
+								<th class="text-right text-primary">{{ $consumption = $grow->getTotalFeedConsumption($delivery->feed_id) }}</th>
+								<th class="text-right text-secondary">{{ $delivered = $grow->getTotalFeedsDelivered($delivery->feed_id) }}</th>
+								<th class="text-right text-success">{{ $delivered-$consumption }}</th>
+							</tr>
+						@endforeach
+					@endif
+				</table>
+			</div>
+		</div>
+		<table class="table table-bordered table-hover table-sm" id="main">
 			<thead>
 				<tr>
 					<th rowspan="2">Age</th>

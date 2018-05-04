@@ -21,16 +21,11 @@ class SummaryController extends Controller
             'dailyLogs.weightRecords.deck',
         ]);
 
-        $feedStock = collect();
-
-        // dd($grow->toArray());
-
-        // $report = Grow::find($growId)->generateReport();
         return view('summary.index', [
             'grow' => $grow,
             'totalChicksInitial' => $chicksPerDeckInitial->values()->sum(),
             'chicksPerDeckInitial' => $chicksPerDeckInitial->toArray(),
-            'feedStock' => $feedStock->toArray(),
+            'feedStock' => [],
         ]);
     }
 }

@@ -55,12 +55,12 @@ class Grow extends Model
 
     public function totalChicks()
     {
-        return intval($this->chickIns()->sum('num_heads'));
+        return intval($this->chickIns->sum('num_heads'));
     }
 
     public function totalDOA()
     {
-        return intval($this->chickIns()->sum('num_dead'));
+        return intval($this->chickIns->sum('num_dead'));
     }
 
     public function netChicks()
@@ -72,19 +72,19 @@ class Grow extends Model
     {
         $dailyLogs = $this->dailyLogs()
             ->with([
-                'mortalities' => function($q) {
+                'mortalities' => function ($q) {
                     $q->selectRaw('SUM(num_am) as num_am, SUM(num_pm) as num_pm, SUM(num_am + num_pm) as total_mortalities, daily_log_id')->groupBy('daily_log_id');
-                }, 
-                'feedsConsumption' => function($q) {
+                },
+                'feedsConsumption' => function ($q) {
                     $q->selectRaw('SUM(num_feed) as num_feed, daily_log_id, feed_id')->groupBy('daily_log_id')->groupBy('feed_id');
-                }, 
-                'feedsDeliveries' => function($q) {
+                },
+                'feedsDeliveries' => function ($q) {
                     $q->selectRaw('SUM(num_feed) as num_feed, daily_log_id, feed_id')->groupBy('daily_log_id')->groupBy('feed_id');
-                }, 
-                'weightRecords' => function($q) {
+                },
+                'weightRecords' => function ($q) {
                     $q->selectRaw('SUM(recorded_weight) as recorded_weight, daily_log_id, deck_id')->groupBy('daily_log_id')->groupBy('deck_id')->orderBy('deck_id');
                 },
-                'weightRecords.deck'
+                'weightRecords.deck',
             ])
             ->get()
             ->pluck(null, 'day_count')
@@ -95,10 +95,42 @@ class Grow extends Model
             'total_chicks' => $this->totalChicks(),
             'total_DOA' => $this->totalDOA(),
             'net_chicks' => $this->netChicks(),
-            'daily_logs' => $dailyLogs
+            'daily_logs' => $dailyLogs,
         ]);
 
         return $dailyLogs;
     }
 
+    public function getTotalMortalityFromLogs()
+    {
+        return $this->dailyLogs->sum(function ($log) {
+            return $log->mortalities->sum(function ($mortality) {
+                return $mortality->num_am + $mortality->num_pm;
+            });
+        });
+    }
+
+    public function getTotalMortality()
+    {
+        return $this->getTotalMortalityFromLogs() + $this->chickIns->sum('num_dead');
+    }
+
+    public function getTotalChickIns()
+    {
+        return $this->chickIns->sum('num_heads');
+    }
+
+    public function getTotalFeedConsumption($feedId)
+    {
+        return $this->dailyLogs->sum(function ($log) use ($feedId) {
+            return $log->getTotalFeedConsumption($feedId);
+        });
+    }
+
+    public function getTotalFeedsDelivered($feedId)
+    {
+        return $this->dailyLogs->sum(function ($log) use ($feedId) {
+            return $log->feedsDeliveries->where('feed_id', $feedId)->first()->num_feed;
+        });
+    }
 }
