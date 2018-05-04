@@ -21,7 +21,7 @@ class SummaryController extends Controller
             'dailyLogs.weightRecords.deck',
         ]);
 
-        $feedStock = $growService->getFeedStock(optional($grow->dailyLogs[0])->id);
+        $feedStock = collect();
 
         // dd($grow->toArray());
 

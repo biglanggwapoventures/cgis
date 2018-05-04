@@ -139,7 +139,7 @@
                                 </td>
                                 <td>
                                     {{ $program['weight'] }}
-                                    {!! Form::hidden("weight[{$loop->index}][optimal_weight]", $program['weight']) !!}
+                                    {!! Form::hidden("weight[{$loop->index}][optimal_weight]", $program['weight'] ?: 0) !!}
                                 </td>
                                 <td>{!! Form::bsText("weight[{$loop->index}][recorded_weight]", null, $weight->recorded_weight ?  $weight->recorded_weight : 0, ['class' => 'actual-weight form-control form-control-sm numeric text-right', 'data-optimal-weight' => $program['weight']]) !!}</td>
                                 <td class="result"></td>

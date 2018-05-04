@@ -13,13 +13,13 @@
 				<tr>
 					<th rowspan="2">Age</th>
 					<th rowspan="2">Date</th>
-					<th rowspan="2">Mortality</th>
+					<th rowspan="2" class="text-white bg-warning">Mortality</th>
 					@if($grow->dailyLogs->count())
 						<th class="bg-info text-white" colspan="{{ $grow->dailyLogs[0]->mortalities->count() }}">Remaining Chicks</th>
 						<th colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}" class="text-white bg-primary">Feeds Delivered</th>
 						<th colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}" class="text-white bg-secondary">Feeds Consumption</th>
 						<th  class="text-white bg-success" colspan="{{ $grow->dailyLogs[0]->feedsDeliveries->count() }}">Remaining Feeds</th>
-						<th colspan="{{ $grow->dailyLogs[0]->weightRecords->count() }}">Weight Records</th>
+						<th colspan="{{ $grow->dailyLogs[0]->weightRecords->count() }}"  class="text-white bg-danger">Weight Records</th>
 					@endif
 				</tr>
 				@if($grow->dailyLogs->count())
@@ -37,7 +37,7 @@
 						<th class="text-white bg-success">{{ $delivery->feed->description }}</th>
 					@endforeach
 					@foreach($grow->dailyLogs[0]->weightRecords as $record)
-						<th>{{ $record->deck->name }}</th>
+						<th class="text-white bg-danger">{{ $record->deck->name }}</th>
 					@endforeach
 				</tr>
 				@endif
@@ -47,7 +47,7 @@
 					<tr>
 						<td> <a target="_blank" href="{{ route('grows.daily-logs.edit', ['dailyLog' => $log->id, 'grow' => $log->grow_id]) }}">{{ $log->day_count }}</a></td>
 						<td>{{ date_create($log->date)->format('m/d/Y') }}</td>
-						<td class="text-right">
+						<td class="text-right bg-warning text-white">
 							@php
 								$mortalityCount = $log->getTotalMortality()
 							@endphp
@@ -69,6 +69,9 @@
 							<td class="text-right text-white bg-secondary">
 								@php
 									$consumed = $log->getTotalFeedConsumption($delivery->feed_id);
+									if(!isset($feedStock[$delivery->feed_id])){
+										$feedStock[$delivery->feed_id] = 0;
+									}
 									$feedStock[$delivery->feed_id] -= $consumed;
 								@endphp
 								{{ $consumed }}
@@ -83,7 +86,7 @@
 							</td>
 						@endforeach
 						@foreach($log->weightRecords as $record)
-							<td class="text-right">{{ $record->recorded_weight }}</td>
+							<td class="text-right text-white bg-danger">{{ $record->recorded_weight }}</td>
 						@endforeach
 					</tr>
 				@empty

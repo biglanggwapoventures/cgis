@@ -53,7 +53,7 @@ class GrowService
         $result = DB::table('feed_logs')
             ->select(DB::raw('SUM(quantity) AS total_quantity'), 'feed_id')
             ->when($point, function ($q) use ($point) {
-                return $q->where('daily_log_id', '<=', $point);
+                return $q->where('daily_log_id', '<', $point);
             })
             ->groupBy('feed_id')
             ->get()
