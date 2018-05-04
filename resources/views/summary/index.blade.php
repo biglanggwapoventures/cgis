@@ -51,7 +51,7 @@
 							@php
 								$mortalityCount = $log->getTotalMortality()
 							@endphp
-							{{ $mortalityCount }}
+							{{ $mortalityCount ?: ''  }}
 						</td>
 						@foreach($log->mortalities as $mortality)
 							<td class="text-right bg-info text-white">
@@ -59,11 +59,11 @@
 									$remaining = $log->getRemainingChickCountFromDeck($mortality->deck_id, $chicksPerDeckInitial[$mortality->deck_id]);
 									$chicksPerDeckInitial[$mortality->deck_id] -= ($mortality->num_am + $mortality->num_pm)
 								 @endphp
-								{{ $remaining }}
+								{{ $remaining ?: '' }}
 							</td>
 						@endforeach
 						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
-							<td class="text-right text-white bg-primary">{{ $delivery->num_feed }}</td>
+							<td class="text-right text-white bg-primary">{{ floatval($delivery->num_feed) ? $delivery->num_feed : '' }}</td>
 						@endforeach
 						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
 							<td class="text-right text-white bg-secondary">
@@ -74,7 +74,7 @@
 									}
 									$feedStock[$delivery->feed_id] -= $consumed;
 								@endphp
-								{{ $consumed }}
+								{{ $consumed ?: '' }}
 							</td>
 						@endforeach
 						@foreach($log->feedsDeliveries->sortBy('feed_id') as $delivery)
@@ -82,11 +82,11 @@
 								@php
 									$feedStock[$delivery->feed_id] += $delivery->num_feed;
 								@endphp
-								{{ $feedStock[$delivery->feed_id] }}
+								{{ $feedStock[$delivery->feed_id] ?: '' }}
 							</td>
 						@endforeach
 						@foreach($log->weightRecords as $record)
-							<td class="text-right text-white bg-warning">{{ $record->recorded_weight }}</td>
+							<td class="text-right text-white bg-warning">{{ floatval($record->recorded_weight) ? $record->recorded_weight : '' }}</td>
 						@endforeach
 					</tr>
 				@empty
