@@ -1,6 +1,11 @@
 @extends('home')
 
 @section('body')
+<style type="text/css">
+	.table th{
+		text-align: center!important;
+	}
+</style>
 <div class="row ">
 	<div class="col-sm-12">
 		<h4>Grow Code: <span class="text-info">{{ $grow->grow_code }}</span></h4>
