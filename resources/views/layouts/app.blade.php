@@ -191,7 +191,9 @@
                     clone = table.find('tbody tr:first').clone();
                     clone.find('select,input:not([type=hidden])')
                     .attr('name', function () {
-                        return $(this).data('name').replace('idx', table.find('tbody tr').length)
+                        if($(this).data('name')){
+                            return $(this).data('name').replace('idx', table.find('tbody tr').length)
+                        }
                     })
                     .val('');
                 clone.find('.clear').html('')

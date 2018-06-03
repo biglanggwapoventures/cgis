@@ -43,7 +43,7 @@
                 <th>Plate #</th>
                 <th class="text-center">Farm Head Count</th>
                 <th class="text-center">Farm ALW</th>
-                <th rowspan="2" class="text-center">DOA</th>
+                <th  class="text-center">DOA</th>
                 <th rowspan="2"></th>
 
             </tr>
@@ -51,6 +51,7 @@
                 <th>WS #</th>
                 <th class="text-center">Actual Head Count</th>
                 <th class="text-center">Actual ALW</th>
+                <th class="text-center">Actual Kilos</th>
             </tr>
         </thead>
         <tbody>
@@ -67,14 +68,15 @@
                 </td>
                 <td>
                     {!! Form::bsText("line[{$loop->index}][farm_num_heads]", null, $row->farm_num_heads, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][farm_num_heads]']) !!}
-                    {!! Form::bsText("line[{$loop->index}][actual_num_heads]", null, $row->actual_num_heads, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_num_heads]']) !!}
+                    {!! Form::bsText("line[{$loop->index}][actual_num_heads]", null, $row->actual_num_heads, ['class' => 'form-control text-right form-control-sm numeric calc-actual-kilos actual-num-heads', 'data-name' => 'line[idx][actual_num_heads]']) !!}
                 </td>
                 <td>
-                    {!! Form::bsText("line[{$loop->index}][farm_average_live_weight]", null, $row->farm_average_live_weight, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][farm_average_live_weight]']) !!}
-                    {!! Form::bsText("line[{$loop->index}][actual_average_live_weight]", null, $row->actual_average_live_weight, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_average_live_weight]']) !!}
+                    {!! Form::bsText("line[{$loop->index}][farm_average_live_weight]", null, $row->farm_average_live_weight, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][farm_average_live_weight]', 'data-format' => '0,0.000']) !!}
+                    {!! Form::bsText("line[{$loop->index}][actual_average_live_weight]", null, $row->actual_average_live_weight, ['class' => 'form-control  calc-actual-kilos actual-alw  text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_average_live_weight]', 'data-format' => '0,0.000']) !!}
                 </td>
                 <td>
-                    {!! Form::bsText("line[{$loop->index}][doa_count]", null, $row->doa_count, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][doa_count]']) !!}
+                    {!! Form::bsText("line[{$loop->index}][doa_count]", null, $row->doa_count, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][doa_count]']) !!}
+                    {!! Form::bsText('', null, number_format($row->actual_average_live_weight * $row->actual_num_heads, 2),  ['class' => 'form-control text-right actual-kilos form-control-sm ', 'readonly' => 'readonly']) !!}
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger remove-line">x</button>
@@ -91,14 +93,15 @@
                 </td>
                 <td>
                     {!! Form::bsText('line[0][farm_num_heads]', null, null, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][farm_num_heads]']) !!}
-                    {!! Form::bsText('line[0][actual_num_heads]', null, null, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_num_heads]']) !!}
+                    {!! Form::bsText('line[0][actual_num_heads]', null, null, ['class' => 'form-control calc-actual-kilos actual-num-heads text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_num_heads]']) !!}
                 </td>
                 <td>
                     {!! Form::bsText('line[0][farm_average_live_weight]', null, null, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][farm_average_live_weight]', 'data-format' => '0,0.000']) !!}
-                    {!! Form::bsText('line[0][actual_average_live_weight]', null, null, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][actual_average_live_weight]', 'data-format' => '0,0.000']) !!}
+                    {!! Form::bsText('line[0][actual_average_live_weight]', null, null, ['class' => 'form-control text-right form-control-sm numeric calc-actual-kilos actual-alw', 'data-name' => 'line[idx][actual_average_live_weight]', 'data-format' => '0,0.000']) !!}
                 </td>
                 <td>
                     {!! Form::bsText('line[0][doa_count]', null, null, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][doa_count]']) !!}
+                    {!! Form::bsText('', null, null,  ['class' => 'actual-kilos form-control text-right form-control-sm ', 'readonly' => 'readonly']) !!}
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger remove-line">x</button>
@@ -115,3 +118,19 @@
     <button type="submit" class="btn btn-success">Submit</button>
 {!! Form::close() !!}
 @endsection
+
+
+@push('js')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.dynamic').on('keyup', '.calc-actual-kilos', function () {
+             var tr = $(this).closest('tr'),
+                actualHeads = parseFloat(tr.find('.actual-num-heads').val() || 0),
+                actualALW = parseFloat(tr.find('.actual-alw').val() || 0);
+
+            tr.find('.actual-kilos').val(numeral((actualHeads * actualALW)).format('0,0.00'));
+
+        })
+    });
+</script>
+@endpush

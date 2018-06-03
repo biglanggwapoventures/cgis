@@ -30,14 +30,14 @@
 					</div>
 					<div class="col-sm-6">
 						<dl class="row mb-0">
-						  <dt class="col-sm-6">Total Chicks</dt>
+						  <dt class="col-sm-6">Total Chick In</dt>
 						  <dd class="col-sm-6">{{ number_format($totalChicks = $grow->getTotalChickIns()) }}</dd>
 						  <dt class="col-sm-6">Total Mortality</dt>
 						  <dd class="col-sm-6 text-danger">{{ number_format($totalMortality = $grow->getTotalMortality()) }}</dd>
 						  <dt class="col-sm-6">Total Live</dt>
 						  <dd class="col-sm-6 text-info">
 						  	{{ number_format($total = ($totalChicks - $totalMortality)) }}
-						  	<strong>({{ number_format(($total/$totalChicks)* 100) }}%)</strong>
+						  	<strong>({{ $total ? number_format(($total/$totalChicks) * 100) : 0 }}%)</strong>
 						  </dd>
 						</dl>
 					</div>
