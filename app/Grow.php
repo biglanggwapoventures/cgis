@@ -133,4 +133,9 @@ class Grow extends Model
             return $log->feedsDeliveries->where('feed_id', $feedId)->first()->num_feed;
         });
     }
+
+    public function scopeOngoing($query)
+    {
+        return $query->whereNull('end_date')->latest();
+    }
 }

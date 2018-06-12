@@ -2,10 +2,17 @@
 
 namespace App;
 
+use App\Traits\RemoveCommasTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class HarvestLine extends Model
 {
+    use RemoveCommasTrait;
+
+    protected $removeCommas = [
+        'actual_kilos',
+    ];
+
     protected $fillable = [
         'harvest_id',
         'column_id',
@@ -16,6 +23,7 @@ class HarvestLine extends Model
         'farm_average_live_weight',
         'actual_average_live_weight',
         'doa_count',
+        'actual_kilos',
     ];
 
     public function harvest()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Column;
 use App\Grow;
 use App\Harvest;
+use App\Rules\NumberFormat;
 use Illuminate\Http\Request;
 
 class HarvestController extends Controller
@@ -44,6 +45,7 @@ class HarvestController extends Controller
             'line.*.farm_average_live_weight' => 'required|numeric',
             'line.*.actual_average_live_weight' => 'required|numeric',
             'line.*.doa_count' => 'required|numeric',
+            'line.*.actual_kilos' => ['nullable', new NumberFormat],
         ], [
             'line.*.column_id.required' => 'Please fill this up',
             'line.*.vehicle_plate_number.required' => 'Please fill this up',
@@ -76,6 +78,7 @@ class HarvestController extends Controller
             'line.*.farm_average_live_weight' => 'required|numeric',
             'line.*.actual_average_live_weight' => 'required|numeric',
             'line.*.doa_count' => 'required|numeric',
+            'line.*.actual_kilos' => ['nullable', new NumberFormat],
         ], [
             'line.*.column_id.required' => 'Please fill this up',
             'line.*.vehicle_plate_number.required' => 'Please fill this up',

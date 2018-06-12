@@ -76,7 +76,7 @@
                 </td>
                 <td>
                     {!! Form::bsText("line[{$loop->index}][doa_count]", null, $row->doa_count, ['class' => 'form-control text-right form-control-sm numeric mb-1', 'data-name' => 'line[idx][doa_count]']) !!}
-                    {!! Form::bsText('', null, number_format($row->actual_average_live_weight * $row->actual_num_heads, 2),  ['class' => 'form-control text-right actual-kilos form-control-sm ', 'readonly' => 'readonly']) !!}
+                    {!! Form::bsText("line[{$loop->index}][actual_kilos]", null, number_format($row->actual_kilos, 2),  ['class' => 'form-control text-right actual-kilos form-control-sm numeric', 'data-format' => '0,0.00']) !!}
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger remove-line">x</button>
@@ -101,7 +101,7 @@
                 </td>
                 <td>
                     {!! Form::bsText('line[0][doa_count]', null, null, ['class' => 'form-control text-right form-control-sm numeric', 'data-name' => 'line[idx][doa_count]']) !!}
-                    {!! Form::bsText('', null, null,  ['class' => 'actual-kilos form-control text-right form-control-sm ', 'readonly' => 'readonly']) !!}
+                    {!! Form::bsText('line[0][actual_kilos]', null, null,  ['class' => 'actual-kilos form-control text-right form-control-sm numeric', 'data-format' => '0,0.00']) !!}
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger remove-line">x</button>
@@ -122,15 +122,15 @@
 
 @push('js')
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('.dynamic').on('keyup', '.calc-actual-kilos', function () {
-             var tr = $(this).closest('tr'),
-                actualHeads = parseFloat(tr.find('.actual-num-heads').val() || 0),
-                actualALW = parseFloat(tr.find('.actual-alw').val() || 0);
+    // $(document).ready(function() {
+    //     $('.dynamic').on('keyup', '.calc-actual-kilos', function () {
+    //          var tr = $(this).closest('tr'),
+    //             actualHeads = parseFloat(tr.find('.actual-num-heads').val() || 0),
+    //             actualALW = parseFloat(tr.find('.actual-alw').val() || 0);
 
-            tr.find('.actual-kilos').val(numeral((actualHeads * actualALW)).format('0,0.00'));
+    //         tr.find('.actual-kilos').val(numeral((actualHeads * actualALW)).format('0,0.00'));
 
-        })
-    });
+    //     })
+    // });
 </script>
 @endpush

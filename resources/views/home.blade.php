@@ -18,6 +18,16 @@
                     <a class="dropdown-item" href="{{ route('farms.index') }}">Farms</a>
                 </div>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Create new log</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    @foreach($grows as $grow)
+                        <a class="dropdown-item" href="{{ route('grows.daily-logs.create', ['grow' => $grow->id]) }}">
+                            {{ $grow->grow_code }}
+                        </a>
+                    @endforeach
+                </div>
+            </li>
         </ul>
     </div>
 </nav>
