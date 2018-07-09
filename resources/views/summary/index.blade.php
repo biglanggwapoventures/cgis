@@ -37,7 +37,7 @@
 						  <dt class="col-sm-6">Total Live</dt>
 						  <dd class="col-sm-6 text-info">
 						  	{{ number_format($total = ($totalChicks - $totalMortality)) }}
-						  	<strong>({{ $total ? number_format(($total/$totalChicks) * 100) : 0 }}%)</strong>
+						  	<strong>({{ $total ? number_format(($total/$totalChicks) * 100, 2) : 0 }}%)</strong>
 						  </dd>
 						</dl>
 					</div>
@@ -60,8 +60,8 @@
 						@foreach($grow->dailyLogs[0]->feedsDeliveries->sortBy('feed_id') as $delivery)
 							<tr>
 								<th>{{ $delivery->feed->description }}</th>
-								<th class="text-right text-primary">{{ $consumption = $grow->getTotalFeedConsumption($delivery->feed_id) }}</th>
 								<th class="text-right text-secondary">{{ $delivered = $grow->getTotalFeedsDelivered($delivery->feed_id) }}</th>
+								<th class="text-right text-primary">{{ $consumption = $grow->getTotalFeedConsumption($delivery->feed_id) }}</th>
 								<th class="text-right text-success">{{ $delivered-$consumption }}</th>
 							</tr>
 						@endforeach
