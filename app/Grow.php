@@ -117,7 +117,7 @@ class Grow extends Model
 
     public function getTotalChickIns()
     {
-        return $this->chickIns->sum('num_heads');
+        return $this->chickIns->sum('net_chicks');
     }
 
     public function getTotalFeedConsumption($feedId)

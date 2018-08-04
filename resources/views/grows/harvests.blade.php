@@ -21,15 +21,30 @@
                     <tbody>
                         <tr>
                             <td>HEADS</td>
-                            <td><strong class="text-info">{{ number_format($data->line->sum('actual_num_heads')) }}</strong></td>
+                            <td>
+                                <strong class="text-info">
+                                    @php $actualNumHeads = $data->line->sum('actual_num_heads') @endphp
+                                    {{ number_format($actualNumHeads) }}
+                                </strong>
+                            </td>
                             <td>DOA</td>
-                             <td><strong class="text-info">{{ number_format($data->line->sum('doa_count')) }}</strong></td>
+                            <td>
+                                <strong class="text-info">
+                                    @php $totalDOA = $data->line->sum('doa_count') @endphp
+                                    {{ number_format($totalDOA) }}
+                                </strong>
+                            </td>
                         </tr>
                         <tr>
                              <td>WEIGHT</td>
-                             <td><strong class="text-info">{{ number_format($data->line->sum(function ($line) { return ($line->actual_average_live_weight * $line->actual_num_heads); }), 2) }}</strong></td>
+                             <td>
+                                <strong class="text-info">
+                                    @php $actualWeight = $data->line->sum('actual_kilos') @endphp
+                                    {{ number_format($actualWeight, 2) }}
+                                </strong>
+                            </td>
                             <td>ALW</td>
-                             <td><strong class="text-info">{{ number_format($data->line->avg('actual_average_live_weight')) }}</strong></td>
+                            <td><strong class="text-info">{{ number_format($actualWeight/$actualNumHeads, 3) }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -45,7 +60,6 @@
                 <th class="text-center">Farm ALW</th>
                 <th  class="text-center">DOA</th>
                 <th rowspan="2"></th>
-
             </tr>
             <tr class="bg-info text-white">
                 <th>WS #</th>

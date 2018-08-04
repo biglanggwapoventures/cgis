@@ -15,8 +15,17 @@ class ChickIn extends Model
         'reference_number',
     ];
 
+    protected $appends = [
+        'net_chicks',
+    ];
+
     public function grow()
     {
         return $this->belongsTo('App\Grow');
+    }
+
+    public function getNetChicksAttribute()
+    {
+        return $this->num_heads - $this->num_dead;
     }
 }
