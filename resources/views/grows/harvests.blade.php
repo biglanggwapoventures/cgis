@@ -44,7 +44,7 @@
                                 </strong>
                             </td>
                             <td>ALW</td>
-                            <td><strong class="text-info">{{ number_format($actualWeight/$actualNumHeads, 3) }}</strong></td>
+                            <td><strong class="text-info">{{  $actualNumHeads ? number_format($actualWeight/$actualNumHeads, 3) : 0 }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
